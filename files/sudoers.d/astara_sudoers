@@ -1,0 +1,3 @@
+Defaults:astara !requiretty
+
+astara ALL = (root) NOPASSWD: /usr/local/bin/astara-rootwrap  /etc/astara/rootwrap.conf *
