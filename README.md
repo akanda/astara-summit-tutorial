@@ -87,34 +87,34 @@ In /etc/neutron/plugins/ml2/linux_bridge.ini, set in the [agent] section::
 
 In /etc/nova/nova.conf, set in the [DEFAULT] section::
 
-   use_ipv6=True
+    use_ipv6=True
 
 In /etc/nova/nova.conf, set in the [neutron] section::
 
-   service_metadata_proxy = True
+    service_metadata_proxy = True
 
 In /etc/nova/policy.json, replace::
 
-   "network:attach_external_network": "rule:admin_api"
+    "network:attach_external_network": "rule:admin_api"
 
    with::
 
-   "network:attach_external_network": "rule:admin_api or role:service"
+    "network:attach_external_network": "rule:admin_api or role:service"
 
 5. Restart Nova and Neutron Services::
 
-   % restart nova-api
-   % restart neutron-server
-   % restart neutron-plugin-linuxbridge-agent
+    % restart nova-api
+    % restart neutron-server
+    % restart neutron-plugin-linuxbridge-agent
 
 6. Create Neutron Resource for Astara Management::
 
-   % neutron net-create astara-mgmt
-   % neutron subnet-create --name mgt-subnet astara-mgmt fdca:3ba5:a17a:acda::/64 --ip-version=6 --ipv6_address_mode=slaac --enable_dhcp
+    % neutron net-create astara-mgmt
+    % neutron subnet-create --name mgt-subnet astara-mgmt fdca:3ba5:a17a:acda::/64 --ip-version=6 --ipv6_address_mode=slaac --enable_dhcp
 
-  Create a public network::
+Create a public network::
 
-   % neutron net-create --shared --router:external public
-   % neutron subnet-create --name public-subnet public 172.16.0.0/24
+    % neutron net-create --shared --router:external public
+    % neutron subnet-create --name public-subnet public 172.16.0.0/24
 
 7. Install Astara
