@@ -22,7 +22,7 @@ Installation
 
 All configuration is to be performed on the controller node.
 
-1. Verify Operational Status of Openstack Deploymnet::
+1. Verify Operational Status of Openstack Deployment::
 
 Source the openstack demouser rc file::
 
@@ -36,11 +36,13 @@ Create neutron resources - networks and router::
     % neutron router-interface-add demo-router demo-subnet
 
 Boot VM Instance::
+
     % nova boot —image cirros-qcow2 --flavor m1.tiny --nic net_id=<demo-net uuid> demoVM
 
 2. Clean up Openstack Environment::
 
 Delete Nova Instance::
+	
     % nova delete demoVM
 
 Delete Neutron Resources::
