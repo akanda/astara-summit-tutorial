@@ -137,7 +137,7 @@ Download the astara software from the openstack git repository::
     % git clone git://git.openstack.org/openstack/astara-appliance
 ```
 
-Create Astara user
+Create Astara user::
 ```
     % useradd --home-dir "/var/lib/astara" --create-home --system --shell /bin/false astara
     % mkdir -p /var/log/astara /var/lib/astara /etc/astara
@@ -195,19 +195,19 @@ nova_metadata_ip = 10.0.1.3
 neutron_metadata_proxy_shared_secret = openstack
 ```
 
-9. Build, Upload and Configure Astara Appliance 
+9. Build, Upload and Configure Astara Appliance::
 
-Create SSH key for appliance access
+Create SSH key for appliance access::
 ```
 % ssh-keygen -f /etc/astara/astara_appliance
 ```
 
-Upload astara appliance to glance
+Upload astara appliance to glance::
 ```
 % openstack image create astara --public --container-format=bare --disk-format=qcow2 --file /root/astara-appliance/astara.qcow2
 ```
 
-Create nova flavor for astara appliance usage
+Create nova flavor for astara appliance usage::
 ```
 % openstack flavor create -id 6 --ram 512 --disk 3 --vcpus 1 --public  m1.astara
 ```
@@ -217,12 +217,12 @@ In /etc/astara/orchestrator.ini, set in the [default] section::
 ssh_public_key = /etc/astara/astara_appliance.pub
 ```
 
-Define image_uuid in [router] section for appliance
+Define image_uuid in [router] section for appliance::
 ```
 image_uuid = $glance_appliance_image_uuid
 ```
 
-Define instance_flavor for use by appliance
+Define instance_flavor for use by appliance::
 ```
 instance_flavor = 6
 ```
@@ -252,7 +252,7 @@ Create Openstack Service for Astara::
 % openstack service create --name astara --description "OpenStack Network Orchestrator" astara
 ```
 
-Create Astara Service Endpoints
+Create Astara Service Endpoints::
 ```
 % openstack endpoint create --region RegionOne astara public  http://<ip_controller>:44250
 % openstack endpoint create --region RegionOne astara internal  http://<ip_controller>:44250
@@ -267,19 +267,68 @@ Add Upstart script for astara orchestrator
 % wget https://github.com/akanda/astara-summit-tutorial/files/init/astara-orchestrator.conf
 ```
 
-Add Logrotate script 
+Add Logrotate script::
 ```
 % cd /etc/logrotate.d/
 % wget https://github.com/akanda/astara-summit-tutorial/files/logrotate.d/astara
 ```
 
-Add sudoers file for astara user
+Add sudoers file for astara user::
 ```
 % cd /etc/sudoers.d/
 % wget https://github.com/akanda/astara-summit-tutorial/files/sudoers.d/astara_sudoers
 ```
 
-Start Astara Orchestrator process
+Start Astara Orchestrator process::
 ```
 % start astara-orchestrator
+```
+
+13. Verify Astara Network Orchestration::
+
+Create private network and subnet::
+```
+% neutron net-create private
+% neutron subnet-create --name private-subnet 10.2.0.0.24
+```
+
+Create router::
+```
+% neutron router-create router
+```
+
+Add Gateway and Network Interfaces to Router::
+```
+% neutron router-interface-add router private-subnet
+% neutron router-gateway-set router public
+```
+
+Boot Instance::
+```
+% nova boot --image cirros-qcow2 --flavor m1.tiny --nic net_id=<private net uuid> demoVM 
+```
+
+Associate Floating IP::
+```
+% neutron floatingip-create public
+% neutron floatingip-associate <floatingip-uuid> <vm port uuid>
+```
+
+14. Under the hood::
+
+Change to openstack admin user credentials
+
+```
+% source /root/adminrc
+```
+
+Validate Astara Service Appliance::
+```
+% nova list —all-tenants
+```
+
+Login to Astara Service Appliance from os-controller::
+```
+% ssh astara@<ipv6 of appliance> 
+% astara-ctl ssh <router-id>
 ```
