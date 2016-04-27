@@ -51,8 +51,8 @@ Delete Nova Instance:
 
 Delete Neutron Resources::
 ```
-% neutron net-delete demo-net
 % neutron router-interface-delete demo-router demo-subnet
+% neutron net-delete demo-net
 % neutron router-delete demo-router 
 ```
 Disable Neutron Agents from starting via upstart::
