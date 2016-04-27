@@ -39,7 +39,7 @@ Create neutron resources - networks and router:
 
 Boot VM Instance::
 ```
-% nova boot —image cirros-qcow2 --flavor m1.tiny --nic net_id=<demo-net uuid> demoVM
+% nova boot --image cirros-qcow2 --flavor m1.tiny --nic net-id=<demo-net uuid> demoVM
 ```
 
 2. Clean up Openstack Environment::
